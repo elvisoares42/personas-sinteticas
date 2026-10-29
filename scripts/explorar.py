@@ -94,17 +94,17 @@ button{font:inherit;padding:8px 14px;border-radius:8px;border:1px solid var(--li
 <div class="mais"><span id="cont"></span><button id="btmais">Mostrar mais</button></div>
 </main>
 <script>
-const D=__DADOS__;const fmt=n=>n.toLocaleString('pt-BR');const C=Object.fromEntries(D.colunas.map((c,i)=>[c,i]));
+const D=__DADOS__;const fmt=n=>n.toLocaleString('pt-BR');const p1=n=>n.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';const C=Object.fromEntries(D.colunas.map((c,i)=>[c,i]));
 const tot=D.totais, soma=k=>tot[k].reduce((a,[,v])=>a+v,0), pctDe=(k,cat)=>{const x=tot[k].find(([c])=>c===cat);return x?100*x[1]/soma(k):0};
-const kpis=[[fmt(D.total),'personas'],[fmt(D.testaveis),'testáveis (18+)'],[pctDe('situacao_domicilio','Urbana').toFixed(1)+'%','em área urbana'],
- [pctDe('deficiencia','sim').toFixed(1)+'%','com deficiência (2+ anos)'],[pctDe('usa_internet','sim').toFixed(1)+'%','usaram internet (10+)']];
+const kpis=[[fmt(D.total),'personas'],[fmt(D.testaveis),'testáveis (18+)'],[p1(pctDe('situacao_domicilio','Urbana')),'em área urbana'],
+ [p1(pctDe('deficiencia','sim')),'com deficiência (2+ anos)'],[p1(pctDe('usa_internet','sim')),'usaram internet (10+)']];
 document.getElementById('kpis').innerHTML=kpis.map(([v,r])=>`<div class="kpi"><b>${v}</b><span>${r}</span></div>`).join('');
 const titulos={faixa:'Faixa de idade',geracao:'Geração',sexo:'Sexo',cor_raca:'Cor ou raça',regiao:'Região',uf:'Estado',situacao_domicilio:'Urbano ou rural',
  instrucao:'Escolaridade (18+)',renda_per_capita:'Renda da casa por pessoa',deficiencia:'Deficiência (2+ anos)',tipos:'Tipos de dificuldade (entre quem tem)',
  internet_em_casa:'Internet em casa',usa_internet:'Usou internet nos últimos 3 meses (10+)'};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 document.getElementById('graficos').innerHTML=Object.keys(titulos).map(k=>{const t=soma(k),max=Math.max(...tot[k].map(([,v])=>v));
- return `<div class="card"><h2>${titulos[k]}</h2>${tot[k].map(([c,v])=>`<div class="barra" title="${esc(c)}: ${fmt(v)}"><span class="rot">${esc(c)}</span><div class="trilho"><div class="enche" style="width:${(100*v/max).toFixed(1)}%"></div></div><span class="pct">${(100*v/t).toFixed(1)}%</span></div>`).join('')}</div>`}).join('');
+ return `<div class="card"><h2>${titulos[k]}</h2>${tot[k].map(([c,v])=>`<div class="barra" title="${esc(c)}: ${fmt(v)}"><span class="rot">${esc(c)}</span><div class="trilho"><div class="enche" style="width:${(100*v/max).toFixed(1)}%"></div></div><span class="pct">${p1(100*v/t)}</span></div>`).join('')}</div>`}).join('');
 const filtros=[['uf','Estado'],['geracao','Geração'],['cor_raca','Cor ou raça'],['renda_per_capita','Renda'],['deficiencia','Deficiência'],['testavel','Testável']];
 const fdiv=document.getElementById('filtros');
 filtros.forEach(([c,r])=>{const vals=[...new Set(D.linhas.map(l=>l[C[c]]))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR'));

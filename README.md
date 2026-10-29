@@ -6,6 +6,10 @@ Cada persona é uma pessoa fictícia sorteada a partir de dados públicos do IBG
 
 > Personas sintéticas **não substituem** pesquisa com pessoas reais, em especial com pessoas com deficiência. Use como triagem e para ampliar repertório, não como prova.
 
+![Totais das 100 mil personas: idade, geração, sexo, cor ou raça, região, estado, escolaridade, renda, deficiência e internet](docs/img/explorar.png)
+
+Para explorar no navegador: `python3 scripts/explorar.py` gera `saida/explorar.html` com os totais e uma amostra navegável com filtros e a ficha de cada persona.
+
 ## O que tem na v0
 
 - **100 mil personas** da população toda (todas as idades), em PT-BR.
@@ -42,6 +46,8 @@ scripts/checar_termos.sh
 - `baixar_fontes.py`: baixa as tabelas do SIDRA/IBGE e da API IBGE Nomes para `dados/fontes/`.
 - `gerar.py`: grava `saida/personas.csv`, `saida/personas.jsonl` (com a ficha) e `saida/campos.json`.
 - `validar.py`: compara a amostra com o IBGE e grava `docs/validacao-v0.md`.
+- `explorar.py`: gera `saida/explorar.html` para ver as personas no navegador.
+- `preparar_hf.py`: monta `saida/hf/` (Parquet, JSONL e cartão do dataset) para o Hugging Face; precisa do pyarrow.
 - `checar_termos.sh`: barra a publicação se aparecer algum termo da lista local `.termos-proibidos` (fora do git).
 
 ## Limitações da v0
