@@ -1,0 +1,5 @@
+saida/
+dados/fontes/*.json
+__pycache__/
+.venv/
+.termos-proibidos
