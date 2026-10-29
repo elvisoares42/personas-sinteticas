@@ -92,6 +92,8 @@ scripts/checar_termos.sh
 - **Nomes**: o ranking do IBGE traz só os 20 nomes mais comuns por estado, década e sexo; nomes raros não aparecem.
 - **Sexo**: o Censo 2022 só perguntou sexo (homem ou mulher), sem identidade de gênero nem orientação. Por isso são três campos: sexo (Censo), identidade de gênero (estudo acadêmico ⚠️) e orientação sexual (PNS 2019). Pessoas intersexo não estão representadas: não há estimativa nacional confiável.
 - **Orientação sexual**: a PNS 2019 é a primeira medição oficial e o próprio IBGE a considera experimental e provavelmente subnotificada (2,3% preferiram não responder). Pesquisas independentes chegam a números bem maiores (ex.: 12% de adultos LGBT+ e assexuais em Spizzirri et al., 2022; 9,3% LGBT+ no Datafolha de 2022): a comparação está no fim de [docs/validacao-v0.md](docs/validacao-v0.md).
+
+  > **Nota de Elvis Soares:** acredito que o número real é maior do que o do IBGE e considero o dado desatualizado. Pesquisei em outras fontes e em grupos representativos, mas não encontrei um dado que represente a população de forma confiável. Por isso, mantive o dado do IBGE, por falta de fonte melhor.
 - **Identidade de gênero**: sorteio com a mesma chance em todo o país e em todas as idades (o estudo não achou diferença entre regiões; pessoas trans eram mais jovens, efeito ainda não aplicado).
 - **Cor ou raça**: as 5 categorias de autodeclaração do IBGE. Quilombola é sorteado à parte (sem ligação com cor ou raça) e pessoas indígenas que se declararam de outra cor (contadas pelo Censo na pergunta "se considera indígena") ainda não entram.
 - Não há jornadas (transporte, saúde, alimentação, finanças, telecom, moradia), fatores políticos nem renda individual. Ficam para as próximas versões.

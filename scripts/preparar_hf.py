@@ -66,6 +66,7 @@ uso de internet bate com as tabelas de origem (maior diferença: {pior}).
 - Só UF × cor ou raça × sexo × idade são sorteados juntos; os outros campos dependem dessas quatro, mas não uns dos outros (ex.: renda não depende da escolaridade).
 - Nomes: o ranking do IBGE traz só os 20 mais comuns por estado, década e sexo. Sobrenomes são uma lista de sobrenomes comuns (não há tabela oficial).
 - Sexo vem do Censo (homem ou mulher). Identidade de gênero (⚠️ estudo acadêmico) e orientação sexual (PNS 2019, experimental) são campos separados, só para 18+. Pessoas intersexo não estão representadas.
+- Orientação sexual: o IBGE considera o dado provavelmente subnotificado. Elvis Soares acredita que o número real é maior e considera o dado desatualizado; pesquisou outras fontes e grupos representativos, mas não encontrou um dado confiável para a população toda, e por isso manteve o do IBGE. Comparação em validacao-v0.md.
 - Cor ou raça nas 5 categorias do IBGE; quilombola sorteado à parte.
 - Sem jornadas de serviços, fatores políticos ou renda individual nesta versão.
 

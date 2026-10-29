@@ -204,5 +204,7 @@ A base segue a **PNS 2019 do IBGE**, a única medição oficial: 1,1% de adultos
 
 Na prática: com a PNS, a base tende a ter **menos** pessoas LGB+ do que o Brasil real. Pelo estudo de 2022, gays e lésbicas seriam cerca de 2,3% (o dobro da PNS) e bissexuais cerca de 2,1% (o triplo); assexuais, que a PNS não pergunta, seriam o maior grupo. Um cenário opcional calibrado por essas pesquisas está planejado para as próximas versões.
 
+> **Nota de Elvis Soares:** acredito que o número real é maior do que o do IBGE e considero o dado desatualizado. Pesquisei em outras fontes e em grupos representativos, mas não encontrei um dado que represente a população de forma confiável. Por isso, mantive o dado do IBGE, por falta de fonte melhor.
+
 Fontes: [IBGE, PNS 2019](https://agenciadenoticias.ibge.gov.br/) · [Spizzirri et al., 2022](https://doi.org/10.1038/s41598-022-15103-y) · [Agência Brasil sobre o estudo](https://agenciabrasil.ebc.com.br/direitos-humanos/noticia/2022-11/brasil-tem-12-de-pessoas-algbt-mostra-levantamento) · [Datafolha/Havaianas 2022](https://www.meioemensagem.com.br/marketing/pesquisa-havaianas-populacao-lgbtqia)
 
