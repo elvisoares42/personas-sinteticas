@@ -92,12 +92,40 @@ def main():
     par("Usa internet (10+)", Counter({"sim": sim, "não": sum(peso.values()) - sim}),
         Counter(p["usa_internet"] for p in pessoas if p["idade"] >= 10))
 
+    f = Counter()
+    for l in pop:
+        f["sim" if l["Cor ou raça"] in ("Preta", "Parda") else "não"] += l["valor"] or 0
+    par("Pessoa negra (preta ou parda)", f, Counter(p["negra"] for p in pessoas))
+
+    q = sum(l["valor"] or 0 for l in carregar("quilombolas"))
+    t = sum(l["valor"] or 0 for l in carregar("situacao_domicilio"))
+    par("Quilombola", Counter({"sim": q, "não": t - q}), Counter(p["quilombola"] for p in pessoas))
+
+    o = json.loads((FONTES / "orientacao_sexual.json").read_text(encoding="utf-8"))
+    adultos = [p for p in pessoas if p["idade"] >= 18]
+    pop18 = Counter()
+    for l in pop:
+        if faixa(l["Idade"])[0] >= 18:
+            pop18[l["Sexo"]] += l["valor"] or 0
+    f = Counter()
+    for sx, d in o["distribuicao_por_sexo"].items():
+        for k, v in d.items():
+            f[k] += v * pop18[sx]
+    par("Orientação sexual (18+, PNS 2019)", f, Counter(p["orientacao_sexual"] for p in adultos))
+    for (a, b), rot in [((18, 29), "18 a 29"), ((30, 39), "30 a 39"), ((40, 59), "40 a 59"), ((60, 200), "60 ou mais")]:
+        g = [p for p in adultos if a <= p["idade"] <= b]
+        v = o["lgb_idade"][rot]
+        par(f"Homossexual ou bissexual, {rot} anos (PNS 2019)", Counter({"sim": v, "não": 100 - v}),
+            Counter("sim" if p["orientacao_sexual"] in ("Homossexual", "Bissexual") else "não" for p in g))
+
     linhas = ["# Validação da v0: amostra × IBGE", "",
               f"{len(pessoas):,} personas comparadas com as tabelas de origem. Diferença em pontos percentuais (pp); "
               f"acima de {LIMITE_PP:g} pp aparece como ⚠️.".replace(",", "."), "",
               "Observações:",
               "- Renda e internet em casa: o universo do IBGE são moradores de domicílios particulares permanentes; as personas incluem toda a população.",
-              "- Uso de internet: % da PNAD TIC 2025 aplicado à população do Censo 2022.", ""]
+              "- Uso de internet: % da PNAD TIC 2025 aplicado à população do Censo 2022.",
+              "- Orientação sexual: PNS 2019 é amostral (intervalos de confiança de ±0,3 a ±0,7 pp por faixa de idade); a PNS é a referência, não um censo.",
+              "- Identidade de gênero não é validada aqui: não há dado oficial (fonte: estudo acadêmico, ver campos.json).", ""]
     pior = 0.0
     for var in fonte:
         linhas += [f"## {var}", "", "| Categoria | IBGE | Personas | Diferença |", "|---|---:|---:|---:|"]

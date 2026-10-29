@@ -110,6 +110,8 @@ def main(so_nomes: bool = False):
            sidra(9606, [93], {86: "allxt", 2: "allxt", 287: idades_simples(9606)}))
     gravar("situacao_domicilio", "IBGE, Censo 2022, tabela 10089 (localização: total)",
            sidra(10089, [93], {2: "allxt", 58: grupos_finos(10089), 2661: [32776], 1: "allxt"}))
+    gravar("quilombolas", "IBGE, Censo 2022, tabela 10089 (pessoas quilombolas, localização: total)",
+           sidra(10089, [4709], {2: "allxt", 58: grupos_finos(10089), 2661: [32776], 1: "allxt"}))
     gravar("instrucao_18mais", "IBGE, Censo 2022, tabela 10061",
            sidra(10061, [2667], {1568: "allxt", 58: grupos_finos(10061, 18), 2: "allxt", 86: "allxt"}))
     gravar("renda_per_capita", "IBGE, Censo 2022, tabela 10296",

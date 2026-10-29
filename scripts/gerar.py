@@ -27,7 +27,9 @@ CAMPOS = {
     "sobrenome": ("⚠️", "lista de sobrenomes comuns no Brasil (não há tabela pública do IBGE de sobrenomes)"),
     "uf": ("✅", "Censo 2022, tabela 9606 (sorteio conjunto UF × cor ou raça × sexo × idade)"),
     "regiao": ("✅", "região do IBGE da UF"),
-    "cor_raca": ("✅", "Censo 2022, tabela 9606"),
+    "cor_raca": ("✅", "Censo 2022, tabela 9606 (autodeclaração nas 5 categorias do IBGE)"),
+    "negra": ("✅", "preta ou parda, critério do IBGE e do Estatuto da Igualdade Racial"),
+    "quilombola": ("✅", "Censo 2022, tabela 10089: pessoas quilombolas por UF, sexo e grupo de idade (independente da cor ou raça ⚠️)"),
     "sexo": ("✅", "Censo 2022, tabela 9606"),
     "idade": ("✅", "Censo 2022, tabela 9606 (idade em 31/07/2022, anos completos)"),
     "ano_nascimento": ("✅", "calculado pela idade e pela data de referência do Censo"),
@@ -40,6 +42,8 @@ CAMPOS = {
     "internet_em_casa": ("✅", "Censo 2022, tabela 9942: conexão domiciliar por UF, cor ou raça e grupo de idade"),
     "usa_internet": ("✅", "PNAD Contínua TIC 2025, tabela 7334: uso nos últimos 3 meses por UF e grupo de idade (10+); independente da conexão em casa ⚠️"),
     "internet_so_celular": ("✅", "PNAD Contínua TIC 2025, tabela 7337: entre quem usa, só pelo celular (média Brasil)"),
+    "orientacao_sexual": ("✅", "IBGE, PNS 2019 (estatística experimental, 18+): distribuição por sexo; chance de ser homossexual ou bissexual por idade, ajustada por UF, sexo e urbano/rural ⚠️ (ajustes multiplicativos)"),
+    "identidade_genero": ("⚠️", "não há dado oficial; Spizzirri et al., Scientific Reports, 2021 (amostra nacional de 6 mil adultos): 0,69% pessoas trans e 1,19% não binárias, sem diferença entre regiões; 18+"),
     "testavel": ("—", "idade 18+; menores entram só para o retrato estatístico"),
 }
 
@@ -181,11 +185,50 @@ class Modelo:
         equip = {l["Equipamento utilizado para acessar a Internet"]: l["valor"] for l in carregar("equipamento_internet")}
         self.so_celular = (equip["Utilizaram somente telefone móvel celular"] or 0) / 100
 
+        # Quilombolas: proporção por UF, sexo e grupo de idade (total de população da mesma tabela)
+        pop_g = defaultdict(float)
+        for l in carregar("situacao_domicilio"):
+            pop_g[(l[uf], l["Sexo"], l["Grupo de idade"])] += l["valor"] or 0
+        quil = defaultdict(float)
+        for l in carregar("quilombolas"):
+            quil[(l[uf], l["Sexo"], l["Grupo de idade"])] += l["valor"] or 0
+        self.quilombola = {k: quil[k] / v for k, v in pop_g.items() if v}
+
+        # Orientação sexual (PNS 2019, 18+)
+        o = json.loads((FONTES / "orientacao_sexual.json").read_text(encoding="utf-8"))
+        tot = o["lgb_total"]
+        self.lgb_idade = [((18, 29), o["lgb_idade"]["18 a 29"]), ((30, 39), o["lgb_idade"]["30 a 39"]),
+                          ((40, 59), o["lgb_idade"]["40 a 59"]), ((60, 200), o["lgb_idade"]["60 ou mais"])]
+        self.lgb_fator = {"sexo": {k: v / tot for k, v in o["lgb_sexo"].items()},
+                          "uf": {k: v / tot for k, v in o["lgb_uf"].items()},
+                          "sit": {k: v / tot for k, v in o["lgb_situacao"].items()}}
+        self.orient_lgb, self.orient_outras = {}, {}
+        for sx, d in o["distribuicao_por_sexo"].items():
+            self.orient_lgb[sx] = Distribuicao({k: d[k] for k in ("Homossexual", "Bissexual")})
+            self.orient_outras[sx] = Distribuicao({k: v for k, v in d.items() if k not in ("Homossexual", "Bissexual")})
+        # calibra os ajustes multiplicativos para o total voltar ao % nacional da PNS
+        esp = soma = 0.0
+        for (u, _, sx, idade), w in zip(self.base.itens, [self.base.cdf[0]] + [b - a for a, b in zip(self.base.cdf, self.base.cdf[1:])]):
+            if idade >= 18:
+                urb = self.situacao.dist((u, sx, grupo_de(self.g_sit, idade)))
+                f_sit = sum(v * self.lgb_fator["sit"][k] for k, v in urb.items()) / sum(urb.values())
+                esp += w * self._lgb_bruto(u, sx, idade) * f_sit
+                soma += w
+        self.lgb_calibra = (tot / 100) / (esp / soma)
+
         self.nomes = {}
         for chave, lista in carregar("nomes_uf_decada_sexo").items():
             if lista:
                 # ⚠️ raiz quadrada da frequência: o ranking só traz o top 20, e o peso bruto inflaria os primeiros (ex.: Maria)
                 self.nomes[tuple(chave.split("|"))] = Distribuicao({n: f ** 0.5 for n, f in lista})
+
+    def _lgb_bruto(self, uf, sexo, idade):
+        base = next(v for (a, b), v in self.lgb_idade if a <= idade <= b) / 100
+        return base * self.lgb_fator["sexo"][sexo] * self.lgb_fator["uf"].get(uf, 1.0)
+
+    def orientacao(self, rng, uf, sexo, idade, situacao):
+        p = self._lgb_bruto(uf, sexo, idade) * self.lgb_fator["sit"][situacao] * self.lgb_calibra
+        return (self.orient_lgb if rng.random() < p else self.orient_outras)[sexo].sortear(rng)
 
     def nome(self, rng, uf, ano, sexo):
         decada = str(min(2010, max(1930, ano // 10 * 10)))
@@ -226,11 +269,24 @@ def gerar_persona(m: Modelo, n: int) -> dict:
         p["internet_so_celular"] = ("sim" if rng.random() < m.so_celular else "não") if usa else ""
     else:
         p["usa_internet"], p["internet_so_celular"] = "não se aplica (menos de 10 anos)", ""
+    p["negra"] = "sim" if raca in ("Preta", "Parda") else "não"
+    p["quilombola"] = "sim" if rng.random() < m.quilombola.get((uf, sexo, grupo_de(m.g_sit, idade)), 0) else "não"
+    if idade >= 18:
+        p["orientacao_sexual"] = m.orientacao(rng, uf, sexo, idade, p["situacao_domicilio"])
+        r = rng.random()
+        p["identidade_genero"] = ("pessoa não binária" if r < 0.0119 else
+                                  ("mulher trans" if sexo == "Mulheres" else "homem trans") if r < 0.0119 + 0.0069 else "cisgênero")
+    else:
+        p["orientacao_sexual"] = p["identidade_genero"] = "não se aplica (menor de 18)"
     p["testavel"] = "sim" if idade >= 18 else "não"
     p["ficha"] = ficha(p)
     return p
 
 
+ORIENT = {"Heterossexual": "Sua orientação sexual: heterossexual. ", "Homossexual": "Sua orientação sexual: homossexual. ",
+          "Bissexual": "Sua orientação sexual: bissexual. ", "Outra orientação sexual": "Você se identifica com outra orientação sexual. ",
+          "Não sabe": "Você não sabe ou não define sua orientação sexual. ",
+          "Recusou-se a responder": "Você prefere não falar sobre sua orientação sexual. "}
 RENDA = {"Sem rendimento": "sem rendimento", "Até 1/4 de salário mínimo": "de até 1/4 de salário mínimo"}
 DIFIC = {"enxergar": "enxergar", "ouvir": "ouvir", "andar ou subir degraus": "andar ou subir degraus",
          "pegar pequenos objetos": "pegar pequenos objetos ou abrir tampas",
@@ -240,12 +296,20 @@ DIFIC = {"enxergar": "enxergar", "ouvir": "ouvir", "andar ou subir degraus": "an
 def ficha(p: dict) -> str:
     """Texto em PT-BR que descreve a persona. Só padrões agregados; nada de empresa ou marca."""
     m = p["sexo"] == "Mulher"
-    o = "a" if m else "o"
+    nb = p["identidade_genero"] == "pessoa não binária"
+    o = "" if nb else ("a " if m else "o ")
     onde = "na zona rural" if p["situacao_domicilio"] == "Rural" else "em área urbana"
     idade = "menos de 1 ano" if p["idade"] == 0 else f"{p['idade']} ano{'s' if p['idade'] != 1 else ''}"
-    t = (f"Você é {o} {p['nome']} {p['sobrenome']}, nasceu em {p['ano_nascimento']} e é da {p['geracao']}; "
+    t = (f"Você é {o}{p['nome']} {p['sobrenome']}, nasceu em {p['ano_nascimento']} e é da {p['geracao']}; "
          f"no Censo de 2022 tinha {idade}. Mora {onde} {NO_UF[p['uf']]} {p['uf']} ({p['regiao']}). "
-         f"Cor ou raça: {p['cor_raca'].lower()}. ")
+         f"Cor ou raça: {p['cor_raca'].lower()}" + (" (pessoa negra)" if p["negra"] == "sim" else "") + ". ")
+    if p["quilombola"] == "sim":
+        t += "Você é quilombola. "
+    if p["identidade_genero"] in ("mulher trans", "homem trans"):
+        t += f"Você é {'uma' if p['identidade_genero'] == 'mulher trans' else 'um'} {p['identidade_genero']}. "
+    elif nb:
+        t += "Você é uma pessoa não binária. "
+    t += ORIENT.get(p["orientacao_sexual"], "")
     if p["idade"] >= 18:
         t += f"Escolaridade: {p['instrucao'].lower()}. "
     renda = RENDA.get(p["renda_per_capita"], p["renda_per_capita"].lower().replace("mais de ", "de mais de "))

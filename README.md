@@ -1,10 +1,32 @@
 # Personas Sintéticas UX
 
-Base aberta de **personas sintéticas que retratam a população brasileira**, feita para a comunidade de UX usar em pesquisa, testes com agentes de IA e ensino.
+**O Brasil inteiro cabe numa sala de teste.** 100 mil pessoas sintéticas, com a cara do país, prontas para testar o seu produto antes de ele chegar a quem importa.
 
-Cada persona é uma pessoa fictícia sorteada a partir de dados públicos do IBGE: a proporção de idades, sexos, cor ou raça, estados, escolaridade, renda, deficiência e uso de internet da amostra bate com o Censo 2022 e a PNAD TIC 2025 (ver [docs/validacao-v0.md](docs/validacao-v0.md)).
+Personas Sintéticas UX é uma base aberta de personas que **retratam a população brasileira** e um caminho para usá-las em testes de usabilidade com agentes de IA. Cada persona é uma pessoa fictícia sorteada a partir de dados públicos do IBGE: idade, sexo, cor ou raça, estado, escolaridade, renda, deficiência, uso de internet, orientação sexual e identidade de gênero aparecem na mesma proporção do país (ver [docs/validacao-v0.md](docs/validacao-v0.md)).
 
 > Personas sintéticas **não substituem** pesquisa com pessoas reais, em especial com pessoas com deficiência. Use como triagem e para ampliar repertório, não como prova.
+
+## De onde vem: o MatrAIx
+
+Este projeto se apoia no **[MatrAIx](https://github.com/MatrAIx-ai/MatrAIx)**, a plataforma aberta (MIT) que simula o mundo com agentes-persona e os coloca para responder pesquisas, conversar com chatbots, navegar em sites e usar apps. Todo o crédito pela plataforma é da equipe do MatrAIx:
+
+> Li, X., Hao, Y., Hou, J., Huang, J., Wen, Q., Huang, S., Liu, Y., Liu, X., Fan, Y., Wang, Y., Wu, K. et al. **MatrAIx: Simulating the World with 8.3 Billion Persona Agents.** arXiv:2608.04205, 2026. [matraix.ai](https://matraix.ai)
+
+O MatrAIx foi feito para pesquisa em larga escala. **Personas Sintéticas UX** é a versão pensada para o dia a dia de quem desenha produtos, com duas contribuições:
+
+1. **Uma base brasileira de verdade** (pronta, nesta versão): 100 mil personas calibradas com o Censo 2022, a PNAD TIC 2025 e a PNS 2019, todas com fonte e status de cada campo.
+2. **Um fork do MatrAIx otimizado para testes de UX** (em construção), para a persona fazer o que um participante faz numa sessão de usabilidade:
+
+| O que a persona faz | Status |
+|---|---|
+| **Navega no navegador de verdade**, clicando, rolando e digitando no seu protótipo ou site | 🔜 em construção |
+| **Pensa em voz alta**: narra o que espera, o que estranha e por que desistiu, como num teste moderado | 🔜 em construção |
+| **Gravação de vídeo e áudio** da sessão, com a voz da persona, para assistir e montar o highlight reel | 🔜 em construção |
+| **Sabe (ou não sabe) usar dispositivos** de acordo com o perfil: quem só usa o celular, quem tem pouca familiaridade, quem usa tecnologia assistiva | 🔜 em construção |
+| **Encontra problemas reais** na interface (botão que não responde, texto confuso, erro de validação) e aponta onde estão | 🔜 em construção |
+| **Teste quantitativo**: centenas de personas respondendo só o formulário, sem gravação | 🔜 em construção |
+
+Enquanto o fork não sai, a base já funciona com o MatrAIx original e com qualquer agente de IA: cada persona traz uma **ficha em texto** para usar como instrução do agente.
 
 ![Totais das 100 mil personas: idade, geração, sexo, cor ou raça, região, estado, escolaridade, renda, deficiência e internet](docs/img/explorar.png)
 
@@ -21,6 +43,10 @@ Para explorar no navegador: `python3 scripts/explorar.py` gera `saida/explorar.h
 |---|---|---|
 | UF, região, cor ou raça, sexo, idade | ✅ | Censo 2022, tabela 9606 (sorteio conjunto) |
 | Ano de nascimento e geração | ✅ | calculado (silenciosa, boomer, X, Y, Z, Alfa) |
+| Pessoa negra | ✅ | preta ou parda (critério do IBGE e do Estatuto da Igualdade Racial) |
+| Quilombola | ✅ | Censo 2022, tabela 10089 (por UF, sexo e idade) |
+| Orientação sexual (18+) | ✅ / ⚠️ | IBGE, PNS 2019 (estatística experimental): heterossexual, homossexual, bissexual, outra, não sabe, prefere não responder; varia por idade, sexo, UF e urbano/rural |
+| Identidade de gênero (18+) | ⚠️ | não há dado oficial; estudo nacional de Spizzirri et al. (Scientific Reports, 2021): 0,69% pessoas trans e 1,19% não binárias |
 | Nome | ✅ / ⚠️ | IBGE Nomes (Censo 2010), ranking por estado, década e sexo; peso pela raiz da frequência (o ranking só traz o top 20) e, fora de 1930–2010, a década mais próxima |
 | Sobrenome | ⚠️ | lista de sobrenomes comuns (não há tabela oficial) |
 | Urbano ou rural | ✅ | Censo 2022, tabela 10089 |
@@ -56,6 +82,10 @@ scripts/checar_termos.sh
 - **Ligações entre campos**: o sorteio é conjunto só em UF × cor ou raça × sexo × idade. Os outros campos dependem dessas quatro variáveis, mas não uns dos outros (ex.: renda não depende da escolaridade; uso de internet não depende da renda). Isso suaviza correlações reais.
 - **Universo**: renda e internet em casa vêm de moradores de domicílios particulares permanentes; aplicamos à população toda.
 - **Nomes**: o ranking do IBGE traz só os 20 nomes mais comuns por estado, década e sexo; nomes raros não aparecem.
+- **Sexo**: o Censo 2022 só perguntou sexo (homem ou mulher), sem identidade de gênero nem orientação. Por isso são três campos: sexo (Censo), identidade de gênero (estudo acadêmico ⚠️) e orientação sexual (PNS 2019). Pessoas intersexo não estão representadas: não há estimativa nacional confiável.
+- **Orientação sexual**: a PNS 2019 é a primeira medição oficial e o próprio IBGE a considera experimental e provavelmente subnotificada (2,3% preferiram não responder).
+- **Identidade de gênero**: sorteio com a mesma chance em todo o país e em todas as idades (o estudo não achou diferença entre regiões; pessoas trans eram mais jovens, efeito ainda não aplicado).
+- **Cor ou raça**: as 5 categorias de autodeclaração do IBGE. Quilombola é sorteado à parte (sem ligação com cor ou raça) e pessoas indígenas que se declararam de outra cor (contadas pelo Censo na pergunta "se considera indígena") ainda não entram.
 - Não há jornadas (transporte, saúde, alimentação, finanças, telecom, moradia), fatores políticos nem renda individual. Ficam para as próximas versões.
 
 ## Próximas versões

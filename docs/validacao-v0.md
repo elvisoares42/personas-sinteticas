@@ -1,12 +1,14 @@
 # Validação da v0: amostra × IBGE
 
 100.000 personas comparadas com as tabelas de origem. Diferença em pontos percentuais (pp); acima de 1 pp aparece como ⚠️.
-**Maior diferença: 0.32 pp** (dentro do limite).
+**Maior diferença: 0.48 pp** (dentro do limite).
 
 
 Observações:
 - Renda e internet em casa: o universo do IBGE são moradores de domicílios particulares permanentes; as personas incluem toda a população.
 - Uso de internet: % da PNAD TIC 2025 aplicado à população do Censo 2022.
+- Orientação sexual: PNS 2019 é amostral (intervalos de confiança de ±0,3 a ±0,7 pp por faixa de idade); a PNS é a referência, não um censo.
+- Identidade de gênero não é validada aqui: não há dado oficial (fonte: estudo acadêmico, ver campos.json).
 
 ## Sexo
 
@@ -136,4 +138,57 @@ Observações:
 |---|---:|---:|---:|
 | sim | 90.73% | 90.67% | -0.06 pp |
 | não | 9.27% | 9.33% | +0.06 pp |
+
+## Pessoa negra (preta ou parda)
+
+| Categoria | IBGE | Personas | Diferença |
+|---|---:|---:|---:|
+| sim | 55.52% | 55.73% | +0.21 pp |
+| não | 44.48% | 44.27% | -0.21 pp |
+
+## Quilombola
+
+| Categoria | IBGE | Personas | Diferença |
+|---|---:|---:|---:|
+| não | 99.34% | 99.32% | -0.02 pp |
+| sim | 0.66% | 0.68% | +0.02 pp |
+
+## Orientação sexual (18+, PNS 2019)
+
+| Categoria | IBGE | Personas | Diferença |
+|---|---:|---:|---:|
+| Heterossexual | 94.75% | 94.77% | +0.02 pp |
+| Recusou-se a responder | 2.30% | 2.28% | -0.02 pp |
+| Homossexual | 1.14% | 1.11% | -0.03 pp |
+| Não sabe | 1.10% | 1.09% | -0.01 pp |
+| Bissexual | 0.66% | 0.70% | +0.04 pp |
+| Outra orientação sexual | 0.05% | 0.05% | -0.00 pp |
+
+## Homossexual ou bissexual, 18 a 29 anos (PNS 2019)
+
+| Categoria | IBGE | Personas | Diferença |
+|---|---:|---:|---:|
+| não | 95.20% | 95.68% | +0.48 pp |
+| sim | 4.80% | 4.32% | -0.48 pp |
+
+## Homossexual ou bissexual, 30 a 39 anos (PNS 2019)
+
+| Categoria | IBGE | Personas | Diferença |
+|---|---:|---:|---:|
+| não | 98.10% | 98.15% | +0.05 pp |
+| sim | 1.90% | 1.85% | -0.05 pp |
+
+## Homossexual ou bissexual, 40 a 59 anos (PNS 2019)
+
+| Categoria | IBGE | Personas | Diferença |
+|---|---:|---:|---:|
+| não | 99.00% | 98.97% | -0.03 pp |
+| sim | 1.00% | 1.03% | +0.03 pp |
+
+## Homossexual ou bissexual, 60 ou mais anos (PNS 2019)
+
+| Categoria | IBGE | Personas | Diferença |
+|---|---:|---:|---:|
+| não | 99.80% | 99.82% | +0.02 pp |
+| sim | 0.20% | 0.18% | -0.02 pp |
 

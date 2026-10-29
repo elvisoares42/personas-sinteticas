@@ -23,7 +23,7 @@ ORDEM = {
 }
 COLUNAS = ["persona_id", "nome", "sobrenome", "idade", "sexo", "cor_raca", "uf", "regiao", "geracao", "situacao_domicilio",
            "instrucao", "renda_per_capita", "deficiencia", "tipos_dificuldade", "internet_em_casa", "usa_internet",
-           "internet_so_celular", "testavel", "ficha"]
+           "internet_so_celular", "testavel", "negra", "quilombola", "orientacao_sexual", "identidade_genero", "ficha"]
 
 
 def faixa(i: int) -> str:
@@ -36,7 +36,8 @@ def main():
     tamanho = int(sys.argv[1]) if len(sys.argv) > 1 else 5000
     pessoas = [json.loads(l) for l in open(SAIDA / "personas.jsonl", encoding="utf-8")]
     cont = {k: Counter() for k in ["faixa", "sexo", "cor_raca", "regiao", "geracao", "situacao_domicilio", "instrucao",
-                                   "renda_per_capita", "deficiencia", "tipos", "internet_em_casa", "usa_internet", "uf"]}
+                                   "renda_per_capita", "deficiencia", "tipos", "internet_em_casa", "usa_internet", "uf", "negra", "quilombola",
+                                   "orientacao_sexual", "identidade_genero"]}
     for p in pessoas:
         cont["faixa"][faixa(p["idade"])] += 1
         for k in cont:
@@ -44,6 +45,8 @@ def main():
                 if k == "instrucao" and p["idade"] < 18:
                     continue
                 if k == "deficiencia" and p["idade"] < 2:
+                    continue
+                if k in ("orientacao_sexual", "identidade_genero") and p["idade"] < 18:
                     continue
                 if k == "usa_internet" and p["idade"] < 10:
                     continue
@@ -99,13 +102,13 @@ const tot=D.totais, soma=k=>tot[k].reduce((a,[,v])=>a+v,0), pctDe=(k,cat)=>{cons
 const kpis=[[fmt(D.total),'personas'],[fmt(D.testaveis),'testáveis (18+)'],[p1(pctDe('situacao_domicilio','Urbana')),'em área urbana'],
  [p1(pctDe('deficiencia','sim')),'com deficiência (2+ anos)'],[p1(pctDe('usa_internet','sim')),'usaram internet (10+)']];
 document.getElementById('kpis').innerHTML=kpis.map(([v,r])=>`<div class="kpi"><b>${v}</b><span>${r}</span></div>`).join('');
-const titulos={faixa:'Faixa de idade',geracao:'Geração',sexo:'Sexo',cor_raca:'Cor ou raça',regiao:'Região',uf:'Estado',situacao_domicilio:'Urbano ou rural',
+const titulos={faixa:'Faixa de idade',geracao:'Geração',sexo:'Sexo',cor_raca:'Cor ou raça',negra:'Pessoa negra (preta ou parda)',quilombola:'Quilombola',orientacao_sexual:'Orientação sexual (18+)',identidade_genero:'Identidade de gênero (18+)',regiao:'Região',uf:'Estado',situacao_domicilio:'Urbano ou rural',
  instrucao:'Escolaridade (18+)',renda_per_capita:'Renda da casa por pessoa',deficiencia:'Deficiência (2+ anos)',tipos:'Tipos de dificuldade (entre quem tem)',
  internet_em_casa:'Internet em casa',usa_internet:'Usou internet nos últimos 3 meses (10+)'};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 document.getElementById('graficos').innerHTML=Object.keys(titulos).map(k=>{const t=soma(k),max=Math.max(...tot[k].map(([,v])=>v));
  return `<div class="card"><h2>${titulos[k]}</h2>${tot[k].map(([c,v])=>`<div class="barra" title="${esc(c)}: ${fmt(v)}"><span class="rot">${esc(c)}</span><div class="trilho"><div class="enche" style="width:${(100*v/max).toFixed(1)}%"></div></div><span class="pct">${p1(100*v/t)}</span></div>`).join('')}</div>`}).join('');
-const filtros=[['uf','Estado'],['geracao','Geração'],['cor_raca','Cor ou raça'],['renda_per_capita','Renda'],['deficiencia','Deficiência'],['testavel','Testável']];
+const filtros=[['uf','Estado'],['geracao','Geração'],['cor_raca','Cor ou raça'],['renda_per_capita','Renda'],['deficiencia','Deficiência'],['orientacao_sexual','Orientação sexual'],['identidade_genero','Identidade de gênero'],['quilombola','Quilombola'],['testavel','Testável']];
 const fdiv=document.getElementById('filtros');
 filtros.forEach(([c,r])=>{const vals=[...new Set(D.linhas.map(l=>l[C[c]]))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR'));
  const s=document.createElement('select');s.dataset.col=c;s.setAttribute('aria-label',r);s.innerHTML=`<option value="">${r}: todos</option>`+vals.map(v=>`<option>${esc(v)}</option>`).join('');fdiv.appendChild(s)});

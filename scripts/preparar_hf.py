@@ -65,12 +65,19 @@ uso de internet bate com as tabelas de origem (maior diferença: {pior}).
 - Retrato de 2022: idades do Censo (a ficha informa o ano de nascimento); uso de internet da PNAD 2025.
 - Só UF × cor ou raça × sexo × idade são sorteados juntos; os outros campos dependem dessas quatro, mas não uns dos outros (ex.: renda não depende da escolaridade).
 - Nomes: o ranking do IBGE traz só os 20 mais comuns por estado, década e sexo. Sobrenomes são uma lista de sobrenomes comuns (não há tabela oficial).
+- Sexo vem do Censo (homem ou mulher). Identidade de gênero (⚠️ estudo acadêmico) e orientação sexual (PNS 2019, experimental) são campos separados, só para 18+. Pessoas intersexo não estão representadas.
+- Cor ou raça nas 5 categorias do IBGE; quilombola sorteado à parte.
 - Sem jornadas de serviços, fatores políticos ou renda individual nesta versão.
 
 ## Como foi gerado
 
 Código aberto (MIT) com gerador determinístico: a persona nº N é sempre a mesma. Fontes: IBGE, Censo 2022
 (tabelas 9606, 10089, 10061, 10296, 10125, 10127 e 9942), PNAD Contínua TIC 2025 (tabelas 7334 e 7337) e IBGE Nomes.
+
+## Créditos
+
+Feito para uso com o [MatrAIx](https://github.com/MatrAIx-ai/MatrAIx) (MIT), plataforma de agentes-persona de Li, X. et al.,
+"MatrAIx: Simulating the World with 8.3 Billion Persona Agents", arXiv:2608.04205, 2026. Dados de origem: IBGE.
 
 ## Licença
 
