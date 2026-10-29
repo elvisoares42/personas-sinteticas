@@ -5,7 +5,7 @@
 cd "$(dirname "$0")/.." || exit 1
 [[ -s .termos-proibidos ]] || { echo "❌ Falta o arquivo .termos-proibidos"; exit 1; }
 TERMOS=$(grep -v '^\s*$' .termos-proibidos | paste -sd '|' -)
-ACHOU=$(grep -rIn -i -E "$TERMOS" . --exclude-dir=.git --exclude-dir=saida --exclude-dir=fontes --exclude=.termos-proibidos)
+ACHOU=$(grep -rIn -i -E "$TERMOS" . --exclude-dir=.git --exclude-dir=saida --exclude-dir=fontes --exclude-dir=.venv --exclude=.termos-proibidos)
 HIST=$(git log -p --all 2>/dev/null | grep -E '^\+[^+]' | grep -i -E "$TERMOS")
 if [[ -n "$ACHOU$HIST" ]]; then
   echo "❌ Termos proibidos encontrados:"; [[ -n "$ACHOU" ]] && echo "$ACHOU"; [[ -n "$HIST" ]] && echo "$HIST"; exit 1
