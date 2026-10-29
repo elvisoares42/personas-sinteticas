@@ -3,3 +3,4 @@ dados/fontes/*.json
 __pycache__/
 .venv/
 .termos-proibidos
+dados/fontes/pns2019/
