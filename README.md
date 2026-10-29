@@ -1,4 +1,4 @@
-# Personas Sintéticas
+# Personas Sintéticas UX
 
 Base aberta de **personas sintéticas que retratam a população brasileira**, feita para a comunidade de UX usar em pesquisa, testes com agentes de IA e ensino.
 
