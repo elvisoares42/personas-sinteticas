@@ -76,7 +76,8 @@ Código aberto (MIT) com gerador determinístico: a persona nº N é sempre a me
 
 ## Créditos
 
-Feito para uso com o [MatrAIx](https://github.com/MatrAIx-ai/MatrAIx) (MIT), plataforma de agentes-persona de Li, X. et al.,
+Criado por [Elvis Soares](https://elvis.work/). Para testes de usabilidade com vídeo e voz, use o fork
+[MatrAIx UX](https://github.com/elvisoares42/matraix-ux). Feito para uso com o [MatrAIx](https://github.com/MatrAIx-ai/MatrAIx) (MIT), plataforma de agentes-persona de Li, X. et al.,
 "MatrAIx: Simulating the World with 8.3 Billion Persona Agents", arXiv:2608.04205, 2026. Dados de origem: IBGE.
 
 ## Licença

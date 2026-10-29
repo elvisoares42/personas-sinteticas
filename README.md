@@ -2,6 +2,8 @@
 
 **O Brasil inteiro cabe numa sala de teste.** 100 mil pessoas sintéticas, com a cara do país, prontas para testar o seu produto antes de ele chegar a quem importa.
 
+Criado por **[Elvis Soares](https://elvis.work/)**.
+
 Personas Sintéticas UX é uma base aberta de personas que **retratam a população brasileira** e um caminho para usá-las em testes de usabilidade com agentes de IA. Cada persona é uma pessoa fictícia sorteada a partir de dados públicos do IBGE: idade, sexo, cor ou raça, estado, escolaridade, renda, deficiência, uso de internet, orientação sexual e identidade de gênero aparecem na mesma proporção do país (ver [docs/validacao-v0.md](docs/validacao-v0.md)).
 
 > Personas sintéticas **não substituem** pesquisa com pessoas reais, em especial com pessoas com deficiência. Use como triagem e para ampliar repertório, não como prova.
@@ -15,18 +17,24 @@ Este projeto se apoia no **[MatrAIx](https://github.com/MatrAIx-ai/MatrAIx)**, a
 O MatrAIx foi feito para pesquisa em larga escala. **Personas Sintéticas UX** é a versão pensada para o dia a dia de quem desenha produtos, com duas contribuições:
 
 1. **Uma base brasileira de verdade** (pronta, nesta versão): 100 mil personas calibradas com o Censo 2022, a PNAD TIC 2025 e a PNS 2019, todas com fonte e status de cada campo.
-2. **Um fork do MatrAIx otimizado para testes de UX** (em construção), para a persona fazer o que um participante faz numa sessão de usabilidade:
+2. **[MatrAIx UX](https://github.com/elvisoares42/matraix-ux)**, um fork do MatrAIx otimizado para testes de UX, para a persona fazer o que um participante faz numa sessão de usabilidade:
 
 | O que a persona faz | Status |
 |---|---|
-| **Navega no navegador de verdade**, clicando, rolando e digitando no seu protótipo ou site | 🔜 em construção |
-| **Pensa em voz alta**: narra o que espera, o que estranha e por que desistiu, como num teste moderado | 🔜 em construção |
-| **Gravação de vídeo e áudio** da sessão, com a voz da persona, para assistir e montar o highlight reel | 🔜 em construção |
-| **Sabe (ou não sabe) usar dispositivos** de acordo com o perfil: quem só usa o celular, quem tem pouca familiaridade, quem usa tecnologia assistiva | 🔜 em construção |
-| **Encontra problemas reais** na interface (botão que não responde, texto confuso, erro de validação) e aponta onde estão | 🔜 em construção |
-| **Teste quantitativo**: centenas de personas respondendo só o formulário, sem gravação | 🔜 em construção |
+| **Navega no navegador de verdade**, tocando, rolando e digitando no seu protótipo ou site, só no que está visível e sem dicas | ✅ pronto |
+| **Pensa em voz alta**: narra o que lê, o que espera, o que estranha e por que desistiu, como num teste moderado | ✅ pronto |
+| **Gravação de vídeo e áudio** da sessão, com a voz da persona, legenda e corte dos trechos parados | ✅ pronto |
+| **Usa o celular do jeito do seu perfil**: quem só usa celular, quem tem pouca familiaridade, quem tem dificuldade para enxergar | ✅ pronto |
+| **Encontra problemas reais** na interface e diz onde estão, com gravidade; SEQ adaptada em cada etapa | ✅ pronto |
+| **Formulário em escala**: SUS, NPS e perguntas abertas para centenas de personas | ✅ pronto |
 
-Enquanto o fork não sai, a base já funciona com o MatrAIx original e com qualquer agente de IA: cada persona traz uma **ficha em texto** para usar como instrução do agente.
+O passo a passo, o custo médio por teste (usabilidade com vídeo e voz: ~US$ 6,50 para 7 personas; formulário: ~US$ 0,40 para 400) e prompts prontos para Claude Code, GitHub Copilot, Cursor e Codex estão no [guia do fork](https://github.com/elvisoares42/matraix-ux/blob/main/docs/ux/COMO-USAR.md).
+A base também funciona com o MatrAIx original e com qualquer agente de IA: cada persona traz uma **ficha em texto** para usar como instrução.
+
+## Onde baixar
+
+- **Hugging Face**: a base pronta (Parquet e JSONL, com o cartão do dataset) vai ficar no Hugging Face, para baixar sem precisar rodar nada. `scripts/preparar_hf.py` monta a pasta de publicação.
+- **Aqui**: gere com os comandos de "Como gerar" abaixo; o resultado é sempre o mesmo (gerador determinístico).
 
 ![Totais das 100 mil personas: idade, geração, sexo, cor ou raça, região, estado, escolaridade, renda, deficiência e internet](docs/img/explorar.png)
 
@@ -92,13 +100,19 @@ scripts/checar_termos.sh
 
 1. **Jornadas**: serviços usados e dores típicas por segmento, a partir de dados abertos (Consumidor.gov.br, Banco Central, ANS, Anatel) e do feed público de avaliações da App Store, só agregados e com tratamento igual para todas as empresas.
 2. **Squad de especialistas**: avaliadores de produto, UX, UI, desenvolvimento, acessibilidade, marketing, UX writing e privacidade, com ferramentas como axe e Lighthouse.
-3. **Integração com o MatrAIx** (github.com/MatrAIx-ai/MatrAIx, MIT) para testes qualitativos com vídeo, áudio e pensar em voz alta, e quantitativos só com formulário.
+3. **Mais tarefas de exemplo no [MatrAIx UX](https://github.com/elvisoares42/matraix-ux)**: app de banco, agendamento de saúde, cadastro em serviço público.
 
 ## Licenças (propostas)
 
 - Código: MIT.
 - Base de personas: CC BY 4.0.
 - Dados de origem: IBGE (uso livre com citação da fonte).
+
+## Créditos
+
+- Base, gerador e fork UX: **[Elvis Soares](https://elvis.work/)**.
+- Plataforma de agentes-persona: [MatrAIx](https://github.com/MatrAIx-ai/MatrAIx) (Li, X. et al., arXiv:2608.04205, 2026), licença MIT.
+- Dados: IBGE (Censo 2022, PNAD Contínua TIC 2025, PNS 2019); identidade de gênero: Spizzirri et al., *Scientific Reports*, 2021.
 
 ## Decisões
 
