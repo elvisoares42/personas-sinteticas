@@ -32,6 +32,32 @@ def nome_faixa(i: int) -> str:
             return f"{a}+" if b == 200 else f"{a}–{b}"
 
 
+# Outras pesquisas sobre orientação sexual: não entram no sorteio, servem para ler o número do IBGE com cuidado.
+OUTRAS_FONTES_ORIENTACAO = [
+    "## Orientação sexual: o IBGE e outras pesquisas", "",
+    "A base segue a **PNS 2019 do IBGE**, a única medição oficial: 1,1% de adultos homossexuais e 0,7% bissexuais "
+    "(1,8% somados; 4,8% entre 18 e 29 anos). O próprio IBGE diz que o número **provavelmente está subnotificado**: "
+    "a entrevista é presencial, dentro de casa, e o estigma faz parte das pessoas não se declarar "
+    "(2,3% se recusaram a responder e 1,1% disseram não saber). Outras pesquisas nacionais chegam a números bem maiores:", "",
+    "| Pesquisa | Como foi feita | Resultado |",
+    "|---|---|---|",
+    "| **IBGE, PNS 2019** (usada na base) | amostra nacional de domicílios, entrevista presencial | 1,1% homossexuais, 0,7% bissexuais: 1,8% LGB |",
+    "| **Spizzirri et al., *Scientific Reports*, 2022** (campo Datafolha, 2018) | 6 mil adultos, 129 cidades, "
+    "entrevista presencial | 12,0% ALGBT: 1,4% gays, 0,9% lésbicas, 2,1% bissexuais, 5,8% assexuais, "
+    "0,7% trans, 1,2% não binários |",
+    "| **Datafolha, Pesquisa do Orgulho, 2022** (encomendada por Havaianas e All Out) | 3.674 pessoas, 120 municípios | "
+    "pelo menos 9,3% se identificam como LGBT+ |",
+    "", "Na prática: com a PNS, a base tende a ter **menos** pessoas LGB+ do que o Brasil real. "
+    "Pelo estudo de 2022, gays e lésbicas seriam cerca de 2,3% (o dobro da PNS) e bissexuais cerca de 2,1% (o triplo); "
+    "assexuais, que a PNS não pergunta, seriam o maior grupo. "
+    "Um cenário opcional calibrado por essas pesquisas está planejado para as próximas versões.", "",
+    "Fontes: [IBGE, PNS 2019](https://agenciadenoticias.ibge.gov.br/) · "
+    "[Spizzirri et al., 2022](https://doi.org/10.1038/s41598-022-15103-y) · "
+    "[Agência Brasil sobre o estudo](https://agenciabrasil.ebc.com.br/direitos-humanos/noticia/2022-11/brasil-tem-12-de-pessoas-algbt-mostra-levantamento) · "
+    "[Datafolha/Havaianas 2022](https://www.meioemensagem.com.br/marketing/pesquisa-havaianas-populacao-lgbtqia)", "",
+]
+
+
 def main():
     pessoas = list(csv.DictReader(open(SAIDA / "personas.csv", encoding="utf-8")))
     for p in pessoas:
@@ -115,8 +141,9 @@ def main():
     for (a, b), rot in [((18, 29), "18 a 29"), ((30, 39), "30 a 39"), ((40, 59), "40 a 59"), ((60, 200), "60 ou mais")]:
         g = [p for p in adultos if a <= p["idade"] <= b]
         v = o["lgb_idade"][rot]
-        par(f"Homossexual ou bissexual, {rot} anos (PNS 2019)", Counter({"sim": v, "não": 100 - v}),
-            Counter("sim" if p["orientacao_sexual"] in ("Homossexual", "Bissexual") else "não" for p in g))
+        par(f"Homossexual ou bissexual, {rot} anos (PNS 2019)", Counter({"Homossexual ou bissexual": v, "Demais respostas": 100 - v}),
+            Counter("Homossexual ou bissexual" if p["orientacao_sexual"] in ("Homossexual", "Bissexual")
+                    else "Demais respostas" for p in g))
 
     linhas = ["# Validação da v0: amostra × IBGE", "",
               f"{len(pessoas):,} personas comparadas com as tabelas de origem. Diferença em pontos percentuais (pp); "
@@ -133,8 +160,10 @@ def main():
             a, b = fonte[var][cat], amostra[var].get(cat, 0.0)
             d = b - a
             pior = max(pior, abs(d))
-            linhas.append(f"| {cat} | {a:.2f}% | {b:.2f}% | {d:+.2f} pp{' ⚠️' if abs(d) > LIMITE_PP else ''} |")
+            br = lambda x, sinal="": f"{x:{sinal}.2f}".replace(".", ",").replace("-0,00", "0,00").replace("+0,00", "0,00")  # noqa: E731
+            linhas.append(f"| {cat} | {br(a)}% | {br(b)}% | {br(d, '+')} pp{' ⚠️' if abs(d) > LIMITE_PP else ''} |")
         linhas.append("")
+    linhas += OUTRAS_FONTES_ORIENTACAO
     linhas.insert(3, f"**Maior diferença: {pior:.2f} pp** {'(dentro do limite)' if pior <= LIMITE_PP else '(acima do limite)'}.")
     linhas.insert(4, "")
     destino = RAIZ / "docs" / "validacao-v0.md"
