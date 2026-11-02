@@ -28,6 +28,13 @@ O MatrAIx foi feito para pesquisa em larga escala. **Personas Sintéticas UX** �
 | **Encontra problemas reais** na interface e diz onde estão, com gravidade; SEQ adaptada em cada etapa | ✅ pronto |
 | **Formulário em escala**: SUS, NPS e perguntas abertas para centenas de personas | ✅ pronto |
 
+### Veja uma sessão
+
+[![Cristiane Freitas, persona sintética, navegando na loja fictícia Elvis Design](docs/img/demo-loja-exemplo.jpg)](docs/video/demo-loja-exemplo.mp4)
+
+▶️ **[Assista à demonstração](docs/video/demo-loja-exemplo.mp4)** (3 min 20 s, com voz): uma persona (Cristiane, 27 anos, Pernambuco) compra um fone na loja fictícia Elvis Design, tropeça no CEP, se surpreende com o frete e paga com Pix.
+*Demonstração roteirizada para mostrar o formato do vídeo; numa rodada real, quem decide cada passo e cada fala é a IA.*
+
 O passo a passo, o custo médio por teste (usabilidade com 5 personas e vídeo: ~US$ 2,20 com voz básica ou ~US$ 4,50 com voz melhorada; formulário com 400 personas: ~US$ 0,40) e prompts prontos para Claude Code, GitHub Copilot, Cursor e Codex estão no [guia do fork](https://github.com/elvisoares42/matraix-ux/blob/main/docs/ux/COMO-USAR.md).
 A base também funciona com o MatrAIx original e com qualquer agente de IA: cada persona traz uma **ficha em texto** para usar como instrução.
 
