@@ -40,7 +40,7 @@ A base também funciona com o MatrAIx original e com qualquer agente de IA: cada
 
 ## Onde baixar
 
-- **Hugging Face**: a base pronta (Parquet e JSONL, com o cartão do dataset) vai ficar no Hugging Face, para baixar sem precisar rodar nada. `scripts/preparar_hf.py` monta a pasta de publicação.
+- **[Hugging Face](https://huggingface.co/datasets/elvisoares/personas-sinteticas-ux)**: a base pronta (Parquet e JSONL, com o cartão do dataset), para baixar sem precisar rodar nada. `scripts/preparar_hf.py` monta a pasta de publicação.
 - **Aqui**: gere com os comandos de "Como gerar" abaixo; o resultado é sempre o mesmo (gerador determinístico).
 
 ![Totais das 100 mil personas: idade, geração, sexo, cor ou raça, região, estado, escolaridade, renda, deficiência e internet](docs/img/explorar.png)

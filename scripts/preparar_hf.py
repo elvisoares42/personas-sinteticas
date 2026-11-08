@@ -37,12 +37,18 @@ configs:
 # Personas Sintéticas UX: base de 100 mil personas
 
 {total} personas sintéticas que retratam a população brasileira, para a comunidade de UX usar em pesquisa,
-testes com agentes de IA e ensino. Cada persona é sorteada a partir de dados públicos do IBGE (Censo 2022 e
-PNAD Contínua TIC 2025): a proporção de idade, sexo, cor ou raça, estado, escolaridade, renda, deficiência e
-uso de internet bate com as tabelas de origem (maior diferença: {pior}).
+testes com agentes de IA e ensino. Cada persona é sorteada a partir de dados públicos do IBGE (Censo 2022,
+PNAD Contínua TIC 2025 e PNS 2019): a proporção de idade, sexo, cor ou raça, estado, escolaridade, renda,
+deficiência e uso de internet bate com as tabelas de origem (maior diferença: {pior}). A identidade de gênero
+não tem dado oficial e vem de um estudo acadêmico (Spizzirri et al., 2021).
 
 > Personas sintéticas **não substituem** pesquisa com pessoas reais, em especial com pessoas com deficiência.
 > Use como triagem e para ampliar repertório, não como prova.
+
+> **Acurácia:** a base representa a população brasileira, não o público de um produto específico, e a
+> validação mede a proporção em relação ao IBGE, não se as personas preveem o comportamento de pessoas reais.
+> Quem testa precisa ajustar personas, tarefas e modelo de IA ao seu produto e comparar os achados com
+> problemas já conhecidos e dados reais.
 
 ## Arquivos
 
@@ -73,7 +79,8 @@ uso de internet bate com as tabelas de origem (maior diferença: {pior}).
 ## Como foi gerado
 
 Código aberto (MIT) com gerador determinístico: a persona nº N é sempre a mesma. Fontes: IBGE, Censo 2022
-(tabelas 9606, 10089, 10061, 10296, 10125, 10127 e 9942), PNAD Contínua TIC 2025 (tabelas 7334 e 7337) e IBGE Nomes.
+(tabelas 9606, 10089, 10061, 10296, 10125, 10127 e 9942), PNAD Contínua TIC 2025 (tabelas 7334 e 7337), PNS 2019
+e IBGE Nomes. Identidade de gênero: Spizzirri et al., Scientific Reports, 2021.
 
 ## Créditos
 
